@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+dsad
+    <!--在spring配置文件中配置UserDaoImpl
+    id: 唯一标识
+    class : 类全路径
+    scope: single:默认值：创建出来的bean是单例的
+           prototype:创建出来的bean是多例的，每次从容器中获取都会创建出新的对象。
+    -->
+    <!--方式一：无参构造方法实例化--><!--
+    <bean id="userDao" class="com.wf.dao.impl.UserDaoImpl" init-method="init" destroy-method="destory"></bean>
+
+    <bean id="userDao2" class="com.wf.dao.impl.UserDaoImpl2"></bean>-->
+
+
+    <!--方式二：工厂静态方法实例化-->
+    <!--<bean id="userDao" class="com.wf.factory.StaticFactoryBean" factory-method="creatUserDao"></bean>-->
+
+    <!--方式三：普通工厂方法实例化--><!--
+    <bean id="dynamicFactoryBean" class="com.wf.factory.DynamicFactoryBean"></bean>
+    <bean id="userDao" factory-bean="dynamicFactoryBean" factory-method="createUserDao"></bean>-->
+
+
+    <!--配置UserDao方式u一：无参构造方法进行实例化-->
+    <!--<bean id="userDao" class="com.wf.dao.impl.UserDaoImpl"></bean>-->
+    <bean id="userService" class="com.wf.service.impl.UserServiceImpl">
+        <!--<constructor-arg index="0" type="com.wf.dao.impl.IUserDao" ref="userDao"></constructor-arg>-->
+        <!--<constructor-arg name="userDao" ref="userDao"></constructor-arg>-->
+        <!--set方法完成注入依赖-->
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+
+    <bean id="user" class="com.wf.domain.User">
+        <property name="username" value="柳岩"></property>
+        <property name="age" value="18"></property>
+    </bean>
+    <bean id="userDao" class="com.wf.dao.impl.UserDaoImpl">
+        <property name="username" value="王斐"></property>
+        <property name="age" value="18"></property>
+        <!--进行集合类型的注入-->
+        <property name="list" >
+            <list>
+                <value>aaa</value>
+                <ref bean="user"></ref>
+            </list>
+        </property>
+        <!-- 进行set类型注入-->
+        <property name="set">
+            <set>
+                <value>bbb</value>
+                <ref bean="user"></ref>
+            </set>
+        </property>
+
+        <!--进行array类型注入-->
+        <property name="array">
+            <array>
+                <value>ccc</value>
+                <ref bean="user"></ref>
+            </array>
+        </property>
+
+
+        <!--进行map类型注入-->
+        <property name="map">
+            <map>
+                <entry key="k1" value="ddd"></entry>
+                <entry key="k2" value-ref="user"></entry>
+            </map>
+        </property>
+
+        <!--进行properties数据类型注入-->
+        <property name="properties">
+            <props>
+                <prop key="k1">v1</prop>
+                <prop key="k2">v2</prop>
+                <prop key="k3">v3</prop>
+            </props>
+        </property>
+    </bean>
+
+    <import resource="applicationContext-doa.xml"></import>
+</beans>
