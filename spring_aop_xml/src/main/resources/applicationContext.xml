@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd"
+>
+
+
+    <!--目标类交给IOC容器-->
+    <bean id="accountService" class="com.wf.service.impl.AccountServiceImpl"></bean>
+    <bean id="myadvice" class="com.wf.advice.Myadvice"></bean>
+    
+    <aop:config>
+        <!--切点的抽取-->
+        <aop:pointcut id="mypotincut" expression="execution(public void com.wf.service.impl.AccountServiceImpl.transfer())"/>
+        <aop:aspect ref="myadvice">
+            <!--execution[修饰符]返回值类型包名.类名.方法名(参数)    String类型  带参数（java.lang.String）-->
+            <!--<aop:before method="before" pointcut-ref="mypotincut"></aop:before>
+            <aop:after-returning method="afterReturning" pointcut-ref="mypotincut"></aop:after-returning>
+            <aop:after-throwing method="thread" pointcut-ref="mypotincut"></aop:after-throwing>
+            <aop:after method="result" pointcut-ref="mypotincut"></aop:after>-->
+            <aop:around method="around" pointcut-ref="mypotincut"></aop:around>
+        </aop:aspect>
+    </aop:config>
+</beans>
