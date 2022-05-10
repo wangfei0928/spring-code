@@ -2,10 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
     <!--开始注解扫描-->
@@ -28,5 +32,19 @@
     <bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
         <constructor-arg name="ds" ref="dataSource" ></constructor-arg>
     </bean>
+    
+    <!--进行aop配置-->
+    <aop:config>
+        <!--切点表达式-->
+        <aop:pointcut id="MyPointcut" expression="execution(public void com.wf.service.impl.AccountServiceImpl.*(..))"/>
+        <!--切面配置-->
+        <aop:aspect ref="transactionManager">
+            <aop:before method="beginTransaction" pointcut-ref="MyPointcut"></aop:before>
+            <aop:after-returning method="commit" pointcut-ref="MyPointcut"></aop:after-returning>
+            <aop:after-throwing method="roolback" pointcut-ref="MyPointcut"></aop:after-throwing>
+            <aop:after method="release" pointcut-ref="MyPointcut"></aop:after>
+         </aop:aspect>
+
+    </aop:config>
 
 </beans>

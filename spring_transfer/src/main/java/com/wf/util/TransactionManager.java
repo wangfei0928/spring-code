@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@Component
+@Component("transactionManager")
 public class TransactionManager {
     /*
     * 开启事务
