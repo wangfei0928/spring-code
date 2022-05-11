@@ -2,20 +2,28 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+
+
 
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
 
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd"
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd"
 >
     <!--开始扫描注解-->
-    <context:component-scan base-package="com.wf"></context:component-scan>
+    <!--<context:component-scan base-package="com.wf"></context:component-scan>
 
-    <!--引入properties-->
+    &lt;!&ndash;引入properties&ndash;&gt;
     <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
 
-    <!--引入dataSource-->
+    &lt;!&ndash;引入dataSource&ndash;&gt;
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"></property>
         <property name="url" value="${jdbc.url}"></property>
@@ -23,9 +31,39 @@
         <property name="password" value="${jdbc.password}"></property>
     </bean>
 
-    <!--jdbcTemplate-->
+    &lt;!&ndash;jdbcTemplate&ndash;&gt;
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
     </bean>
+
+    &lt;!&ndash;事务管理&ndash;&gt;
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    &lt;!&ndash;事务的注解支持&ndash;&gt;
+    <tx:annotation-driven></tx:annotation-driven>-->
+
+    <!--通知增强
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        &lt;!&ndash;
+        定义事务的一些属性：* 表示当前任意名称的方法都是默认配置
+        name： 切点方法名称
+        isolation:事务隔离级别
+        propagation：事务的传播行为
+        read-only:是否只读
+        timeout:超时时间
+        &ndash;&gt;
+        <tx:attributes>
+            <tx:method name="transfer" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" timeout="-1"/>
+        </tx:attributes>
+    </tx:advice>
+
+    &lt;!&ndash;aop切面配置&ndash;&gt;
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice"
+                     pointcut="execution(* com.wf.service..*.*(..))"></aop:advisor>
+    </aop:config>-->
+
 
 </beans>
